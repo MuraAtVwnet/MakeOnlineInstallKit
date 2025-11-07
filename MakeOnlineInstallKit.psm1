@@ -1,15 +1,17 @@
 ﻿###########################################################
 # PowerShell Online Install Kit 作成
 ###########################################################
+function MakeOnlineInstallKit(){
 
-####################################
-# ヒア文字列を配列にする
-####################################
-function HereString2StringArray( $HereString ){
-	$Temp = $HereString.Replace("`r","")
-	$StringArray = $Temp.Split("`n")
-	return $StringArray
-}
+
+	####################################
+	# ヒア文字列を配列にする
+	####################################
+	function HereString2StringArray( $HereString ){
+		$Temp = $HereString.Replace("`r","")
+		$StringArray = $Temp.Split("`n")
+		return $StringArray
+	}
 
 $AddCode = @'
 function AddCode(, [switch]$VertionCheck){
@@ -93,16 +95,16 @@ $ModuleName = "##ModuleName##"
 
 # Module Path
 if(($PSVersionTable.Platform -eq "Win32NT") -or ($PSVersionTable.Platform -eq $null)){
-    $ModulePath = Join-Path (Split-Path $PROFILE -Parent) "Modules"
+	$ModulePath = Join-Path (Split-Path $PROFILE -Parent) "Modules"
 }
 else{
-    $ModulePath = Join-Path ($env:HOME) "/.local/share/powershell/Modules"
+	$ModulePath = Join-Path ($env:HOME) "/.local/share/powershell/Modules"
 }
 $NewPath = Join-Path $ModulePath $ModuleName
 
 # Make Directory
 if( -not (Test-Path $NewPath)){
-    New-Item $NewPath -ItemType Directory -ErrorAction SilentlyContinue
+	New-Item $NewPath -ItemType Directory -ErrorAction SilentlyContinue
 }
 
 # Copy Module
@@ -184,93 +186,94 @@ $ModuleName = "##ModuleName##"
 
 # Module Path
 if(($PSVersionTable.Platform -eq "Win32NT") -or ($PSVersionTable.Platform -eq $null)){
-    $ModulePath = Join-Path (Split-Path $PROFILE -Parent) "Modules"
+	$ModulePath = Join-Path (Split-Path $PROFILE -Parent) "Modules"
 }
 else{
-    $ModulePath = Join-Path ($env:HOME) "/.local/share/powershell/Modules"
+	$ModulePath = Join-Path ($env:HOME) "/.local/share/powershell/Modules"
 }
 $RemovePath = Join-Path $ModulePath $ModuleName
 
 # Remove Direcory
 if( Test-Path $RemovePath ){
-    Remove-Item $RemovePath -Force -Recurse
+	Remove-Item $RemovePath -Force -Recurse
 }
 
 '@
 
 
-####################################
-# main
-####################################
+	####################################
+	# main
+	####################################
 
-$URI = Get-Clipboard
+	$URI = Get-Clipboard
 
-[array]$Parts = $URI.Split("/")
+	[array]$Parts = $URI.Split("/")
 
-# GitHub URL か確認
+	# GitHub URL か確認
 
-$IsGitHubURL = $True
+	$IsGitHubURL = $True
 
-if( $Parts.Count -eq 1 ){
-	$IsGitHubURL = $False
+	if( $Parts.Count -eq 1 ){
+		$IsGitHubURL = $False
+	}
+
+	if( $Parts[0] -ne "https:" ){
+		$IsGitHubURL = $False
+	}
+
+	if( $Parts[2] -ne "github.com" ){
+		$IsGitHubURL = $False
+	}
+
+	$GitHubName = $Parts[3]
+	if( $GitHubName -eq $null ){
+		$IsGitHubURL = $False
+	}
+
+	$ModuleName = $Parts[4]
+	if( $ModuleName -eq $null ){
+		$IsGitHubURL = $False
+	}
+
+	if( -Not $IsGitHubURL ){
+		Write-Output "$URI は 有効な URL ではありません"
+		exit
+	}
+
+	$CurrentDirectory = Get-Location
+
+	$AddCodeStrings = HereString2StringArray $AddCode
+	$Temp = $AddCodeStrings.Replace("##ModuleName##", $ModuleName)
+	$OutAddCodeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
+	$AddCodeStringsPath = Join-Path $CurrentDirectory "AddCode.ps1"
+	Set-Content -Value $OutAddCodeStrings -Path $AddCodeStringsPath -Encoding utf8
+
+	$InstallStrings = HereString2StringArray $Install
+	$Temp = $InstallStrings.Replace("##ModuleName##", $ModuleName)
+	$OutInstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
+	$InstallStringsPath = Join-Path $CurrentDirectory "Install.ps1"
+	Set-Content -Value $OutInstallStrings -Path $InstallStringsPath -Encoding utf8
+
+	$OnlineInstallStrings = HereString2StringArray $OnlineInstall
+	$Temp = $OnlineInstallStrings.Replace("##ModuleName##", $ModuleName)
+	$OutOnlineInstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
+	$OnlineInstallStringsPath = Join-Path $CurrentDirectory "OnlineInstall.ps1"
+	Set-Content -Value $OutOnlineInstallStrings -Path $OnlineInstallStringsPath -Encoding utf8
+
+	$ReadmeStrings = HereString2StringArray $Readme
+	$Temp = $ReadmeStrings.Replace("##ModuleName##", $ModuleName)
+	$OutReadmeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
+	$ReadmeStringsPath = Join-Path $CurrentDirectory "Readme.txt"
+	Set-Content -Value $OutReadmeStrings -Path $ReadmeStringsPath -Encoding utf8
+
+	$UninstallStrings = HereString2StringArray $Uninstall
+	$Temp = $UninstallStrings.Replace("##ModuleName##", $ModuleName)
+	$OutUninstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
+	$UninstallStringsPath = Join-Path $CurrentDirectory "Uninstall.ps1"
+	Set-Content -Value $OutUninstallStrings -Path $UninstallStringsPath -Encoding utf8
+
+	$OutVertion = (Get-Date).ToString("yyyy年MM月dd日(ddd) HH:mm")
+	$VertionPath = Join-Path $CurrentDirectory "Vertion.txt"
+	Set-Content -Value $OutVertion -Path $VertionPath -Encoding utf8
 }
-
-if( $Parts[0] -ne "https:" ){
-	$IsGitHubURL = $False
-}
-
-if( $Parts[2] -ne "github.com" ){
-	$IsGitHubURL = $False
-}
-
-$GitHubName = $Parts[3]
-if( $GitHubName -eq $null ){
-	$IsGitHubURL = $False
-}
-
-$ModuleName = $Parts[4]
-if( $ModuleName -eq $null ){
-	$IsGitHubURL = $False
-}
-
-if( -Not $IsGitHubURL ){
-	Write-Output "$URI は 有効な URL ではありません"
-	exit
-}
-
-$CurrentDirectory = Get-Location
-
-$AddCodeStrings = HereString2StringArray $AddCode
-$Temp = $AddCodeStrings.Replace("##ModuleName##", $ModuleName)
-$OutAddCodeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
-$AddCodeStringsPath = Join-Path $CurrentDirectory "AddCode.ps1"
-Set-Content -Value $OutAddCodeStrings -Path $AddCodeStringsPath -Encoding utf8
-
-$InstallStrings = HereString2StringArray $Install
-$Temp = $InstallStrings.Replace("##ModuleName##", $ModuleName)
-$OutInstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
-$InstallStringsPath = Join-Path $CurrentDirectory "Install.ps1"
-Set-Content -Value $OutInstallStrings -Path $InstallStringsPath -Encoding utf8
-
-$OnlineInstallStrings = HereString2StringArray $OnlineInstall
-$Temp = $OnlineInstallStrings.Replace("##ModuleName##", $ModuleName)
-$OutOnlineInstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
-$OnlineInstallStringsPath = Join-Path $CurrentDirectory "OnlineInstall.ps1"
-Set-Content -Value $OutOnlineInstallStrings -Path $OnlineInstallStringsPath -Encoding utf8
-
-$ReadmeStrings = HereString2StringArray $Readme
-$Temp = $ReadmeStrings.Replace("##ModuleName##", $ModuleName)
-$OutReadmeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
-$ReadmeStringsPath = Join-Path $CurrentDirectory "Readme.txt"
-Set-Content -Value $OutReadmeStrings -Path $ReadmeStringsPath -Encoding utf8
-
-$UninstallStrings = HereString2StringArray $Uninstall
-$Temp = $UninstallStrings.Replace("##ModuleName##", $ModuleName)
-$OutUninstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
-$UninstallStringsPath = Join-Path $CurrentDirectory "Uninstall.ps1"
-Set-Content -Value $OutUninstallStrings -Path $UninstallStringsPath -Encoding utf8
-
-$OutVertion = (Get-Date).ToString("yyyy年MM月dd日(ddd) HH:mm")
-$VertionPath = Join-Path $CurrentDirectory "Vertion.txt"
-Set-Content -Value $OutVertion -Path $VertionPath -Encoding utf8
 
