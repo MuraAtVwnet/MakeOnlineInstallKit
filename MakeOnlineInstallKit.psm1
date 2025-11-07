@@ -4,15 +4,16 @@
 function MakeOnlineInstallKit(){
 
 
-	####################################
-	# ヒア文字列を配列にする
-	####################################
+####################################
+# ヒア文字列を配列にする
+####################################
 	function HereString2StringArray( $HereString ){
 		$Temp = $HereString.Replace("`r","")
 		$StringArray = $Temp.Split("`n")
 		return $StringArray
 	}
 
+### パーションチェックを関数に組み込む追加コード
 $AddCode = @'
 function AddCode(, [switch]$VertionCheck){
 
@@ -85,10 +86,12 @@ function AddCode(, [switch]$VertionCheck){
 		}
 		return
 	}
-	# 本来のコード
+
+	# 以下本来のコード
 
 '@
 
+### インストーラー
 $Install = @'
 # Module Name
 $ModuleName = "##ModuleName##"
@@ -113,6 +116,7 @@ Copy-Item $ModuleFileName $NewPath
 
 '@
 
+### オンラインインストーラー
 $OnlineInstall = @'
 # Online installer
 
@@ -151,6 +155,7 @@ Remove-Item $OnlineInstaller
 
 '@
 
+### 公開リポジトリと初期インストールコマンドを Readme.txt として出力
 $Readme = @'
 ■ これは何?
 
@@ -180,6 +185,7 @@ Invoke-WebRequest -Uri $URI -OutFile $OutFile
 
 '@
 
+### アンインストーラー
 $Uninstall = @'
 # Module Name
 $ModuleName = "##ModuleName##"
@@ -201,9 +207,9 @@ if( Test-Path $RemovePath ){
 '@
 
 
-	####################################
-	# main
-	####################################
+####################################
+# main
+####################################
 
 	$URI = Get-Clipboard
 
@@ -237,41 +243,47 @@ if( Test-Path $RemovePath ){
 
 	if( -Not $IsGitHubURL ){
 		Write-Output "$URI は 有効な URL ではありません"
-		exit
+		return
 	}
 
 	$CurrentDirectory = Get-Location
 
+	# バージョンチェック組み込み用追加コード
 	$AddCodeStrings = HereString2StringArray $AddCode
 	$Temp = $AddCodeStrings.Replace("##ModuleName##", $ModuleName)
 	$OutAddCodeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
 	$AddCodeStringsPath = Join-Path $CurrentDirectory "AddCode.ps1"
 	Set-Content -Value $OutAddCodeStrings -Path $AddCodeStringsPath -Encoding utf8
 
+	# インストーラー
 	$InstallStrings = HereString2StringArray $Install
 	$Temp = $InstallStrings.Replace("##ModuleName##", $ModuleName)
 	$OutInstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
 	$InstallStringsPath = Join-Path $CurrentDirectory "Install.ps1"
 	Set-Content -Value $OutInstallStrings -Path $InstallStringsPath -Encoding utf8
 
+	# オンラインインストーラー
 	$OnlineInstallStrings = HereString2StringArray $OnlineInstall
 	$Temp = $OnlineInstallStrings.Replace("##ModuleName##", $ModuleName)
 	$OutOnlineInstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
 	$OnlineInstallStringsPath = Join-Path $CurrentDirectory "OnlineInstall.ps1"
 	Set-Content -Value $OutOnlineInstallStrings -Path $OnlineInstallStringsPath -Encoding utf8
 
+	# 公開リポジトリ初期インストールコマンド
 	$ReadmeStrings = HereString2StringArray $Readme
 	$Temp = $ReadmeStrings.Replace("##ModuleName##", $ModuleName)
 	$OutReadmeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
 	$ReadmeStringsPath = Join-Path $CurrentDirectory "Readme.txt"
 	Set-Content -Value $OutReadmeStrings -Path $ReadmeStringsPath -Encoding utf8
 
+	# アンインストーラー
 	$UninstallStrings = HereString2StringArray $Uninstall
 	$Temp = $UninstallStrings.Replace("##ModuleName##", $ModuleName)
 	$OutUninstallStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
 	$UninstallStringsPath = Join-Path $CurrentDirectory "Uninstall.ps1"
 	Set-Content -Value $OutUninstallStrings -Path $UninstallStringsPath -Encoding utf8
 
+	# バージョンチェックファイル
 	$OutVertion = (Get-Date).ToString("yyyy年MM月dd日(ddd) HH:mm")
 	$VertionPath = Join-Path $CurrentDirectory "Vertion.txt"
 	Set-Content -Value $OutVertion -Path $VertionPath -Encoding utf8
