@@ -13,7 +13,7 @@ function MakeOnlineInstallKit(){
 		return $StringArray
 	}
 
-### パーションチェックを関数に組み込む追加コード
+### バージョンチェックを関数に組み込む追加コード
 $AddCode = @'
 function AddCode(, [switch]$VertionCheck){
 
