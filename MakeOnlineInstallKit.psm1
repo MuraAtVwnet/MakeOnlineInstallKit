@@ -26,8 +26,7 @@ function AddCode(, [switch]$VertionCheck){
 		$Installer = "Install" + $ModuleName + ".ps1"
 		$Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 		$Vertion = "Vertion" + $ModuleName + ".txt"
-		$GithubBaseURI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/"
-		$GithubCommonURI = $GithubBaseURI + "Install.ps1"
+		$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/"
 		$VertionTemp = "VertionTemp" + $ModuleName + ".tmp"
 		$VertionFilePath = Join-Path "~/" $Vertion
 		$VertionTempFilePath = Join-Path "~/" $VertionTemp
@@ -128,7 +127,7 @@ $Module = $ModuleName + ".psm1"
 $Installer = "Install" + $ModuleName + ".ps1"
 $Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 $Vertion = "Vertion" + $ModuleName + ".txt"
-$GithubCommonURI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/"
+$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/"
 $OnlineInstaller = $HomeDirectory + "OnlineInstall.ps1"
 
 $URI = $GithubCommonURI + $Module
@@ -167,21 +166,43 @@ $Readme = @'
 最新版があれば、自動ダウンロード & 更新します
 
 
-■ GitHub
-以下リポジトリで公開しています
-https://github.com/##MGitHubName##/##ModuleName##
-git@github.com:##MGitHubName##/##ModuleName##.git
-
 ■ スクリプトインストール方法
 
 --- 以下を PowerShell プロンプトにコピペ ---
 
 $ModuleName = "##ModuleName##"
 $GitHubName = "##MGitHubName##"
-$URI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/OnlineInstall.ps1"
+$URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/OnlineInstall.ps1"
 $OutFile = "~/OnlineInstall.ps1"
 Invoke-WebRequest -Uri $URI -OutFile $OutFile
 & $OutFile
+
+■ スクリプトアンインストール方法
+--- 以下を PowerShell プロンプトにコピペ ---
+
+~/Uninstall##ModuleName##.ps1
+
+■ GitHub
+以下リポジトリで公開しています
+https://github.com/##MGitHubName##/##ModuleName##
+git@github.com:##MGitHubName##/##ModuleName##.git
+
+■ リポジトリ内モジュール説明
+
+AddCode.ps1
+	オンラインインストール用組み込みコード
+Install.ps1
+	インストーラー
+##ModuleName##.psm1
+	モジュール本体
+OnlineInstall.ps1
+	オンラインインストーラー
+Uninstall.ps1
+	アンインストーラー
+Vertion.txt
+	バージョンチェックファイル
+Readme.txt
+	このファイル
 
 '@
 
@@ -273,7 +294,7 @@ if( Test-Path $RemovePath ){
 	$ReadmeStrings = HereString2StringArray $Readme
 	$Temp = $ReadmeStrings.Replace("##ModuleName##", $ModuleName)
 	$OutReadmeStrings = $Temp.Replace("##MGitHubName##", $GitHubName)
-	$ReadmeStringsPath = Join-Path $CurrentDirectory "Readme.txt"
+	$ReadmeStringsPath = Join-Path $CurrentDirectory "ReadmeBase.txt"
 	Set-Content -Value $OutReadmeStrings -Path $ReadmeStringsPath -Encoding utf8
 
 	# アンインストーラー
