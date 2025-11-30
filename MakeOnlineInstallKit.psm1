@@ -167,7 +167,6 @@ $Readme = @'
 
 
 ■ スクリプトインストール方法
-
 --- 以下を PowerShell プロンプトにコピペ ---
 
 $ModuleName = "##ModuleName##"
@@ -177,15 +176,24 @@ $OutFile = "~/OnlineInstall.ps1"
 Invoke-WebRequest -Uri $URI -OutFile $OutFile
 & $OutFile
 
+
 ■ スクリプトアンインストール方法
 --- 以下を PowerShell プロンプトにコピペ ---
 
 ~/Uninstall##ModuleName##.ps1
 
+
+■ Windows PowerShell を使っている方へ
+Windows PowerShell では、スクリプト実行が禁止になっていて、インストールとかうまく動かない場合は以下コマンドを PowerShell  のプロンプトにコピペしてください
+
+if((Get-ExecutionPolicy) -ne 'RemoteSigned'){Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force}
+
+
 ■ GitHub
 以下リポジトリで公開しています
 https://github.com/##MGitHubName##/##ModuleName##
 git@github.com:##MGitHubName##/##ModuleName##.git
+
 
 ■ リポジトリ内モジュール説明
 
