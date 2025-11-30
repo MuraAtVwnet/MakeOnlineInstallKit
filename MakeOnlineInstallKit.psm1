@@ -26,8 +26,8 @@ function AddCode(, [switch]$VertionCheck){
 		$Installer = "Install" + $ModuleName + ".ps1"
 		$UnInstaller = "UnInstall" + $ModuleName + ".ps1"
 		$Vertion = "Vertion" + $ModuleName + ".txt"
-		$GithubCommonURI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/"
-
+		$GithubBaseURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/"
+		$GithubCommonURI = $GithubBaseURI + "Install.ps1"
 		$VertionTemp = "VertionTemp" + $ModuleName + ".tmp"
 		$VertionFilePath = Join-Path "~/" $Vertion
 		$VertionTempFilePath = Join-Path "~/" $VertionTemp
@@ -128,7 +128,7 @@ $Module = $ModuleName + ".psm1"
 $Installer = "Install" + $ModuleName + ".ps1"
 $UnInstaller = "UnInstall" + $ModuleName + ".ps1"
 $Vertion = "Vertion" + $ModuleName + ".txt"
-$GithubCommonURI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/"
+$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/"
 $OnlineInstaller = $HomeDirectory + "OnlineInstall.ps1"
 
 $URI = $GithubCommonURI + $Module
@@ -178,7 +178,7 @@ git@github.com:##MGitHubName##/##ModuleName##.git
 
 $ModuleName = "##ModuleName##"
 $GitHubName = "##MGitHubName##"
-$URI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/OnlineInstall.ps1"
+$URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/OnlineInstall.ps1"
 $OutFile = "~/OnlineInstall.ps1"
 Invoke-WebRequest -Uri $URI -OutFile $OutFile
 & $OutFile
