@@ -24,9 +24,9 @@ function AddCode(, [switch]$VertionCheck){
 		$HomeDirectory = "~/"
 		$Module = $ModuleName + ".psm1"
 		$Installer = "Install" + $ModuleName + ".ps1"
-		$UnInstaller = "UnInstall" + $ModuleName + ".ps1"
+		$Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 		$Vertion = "Vertion" + $ModuleName + ".txt"
-		$GithubBaseURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/"
+		$GithubBaseURI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/"
 		$GithubCommonURI = $GithubBaseURI + "Install.ps1"
 		$VertionTemp = "VertionTemp" + $ModuleName + ".tmp"
 		$VertionFilePath = Join-Path "~/" $Vertion
@@ -61,12 +61,12 @@ function AddCode(, [switch]$VertionCheck){
 			$ModuleFile = $HomeDirectory + $Module
 			Invoke-WebRequest -Uri $URI -OutFile $ModuleFile
 
-			$URI = $GithubCommonURI + "install.ps1"
+			$URI = $GithubCommonURI + "Install.ps1"
 			$InstallerFile = $HomeDirectory + $Installer
 			Invoke-WebRequest -Uri $URI -OutFile $InstallerFile
 
-			$URI = $GithubCommonURI + "uninstall.ps1"
-			$OutFile = $HomeDirectory + $UnInstaller
+			$URI = $GithubCommonURI + "Uninstall.ps1"
+			$OutFile = $HomeDirectory + $Uninstaller
 			Invoke-WebRequest -Uri $URI -OutFile $OutFile
 
 			$URI = $GithubCommonURI + "Vertion.txt"
@@ -126,21 +126,21 @@ $GitHubName = "##MGitHubName##"
 $HomeDirectory = "~/"
 $Module = $ModuleName + ".psm1"
 $Installer = "Install" + $ModuleName + ".ps1"
-$UnInstaller = "UnInstall" + $ModuleName + ".ps1"
+$Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 $Vertion = "Vertion" + $ModuleName + ".txt"
-$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/"
+$GithubCommonURI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/"
 $OnlineInstaller = $HomeDirectory + "OnlineInstall.ps1"
 
 $URI = $GithubCommonURI + $Module
 $ModuleFile = $HomeDirectory + $Module
 Invoke-WebRequest -Uri $URI -OutFile $ModuleFile
 
-$URI = $GithubCommonURI + "install.ps1"
+$URI = $GithubCommonURI + "Install.ps1"
 $InstallerFile = $HomeDirectory + $Installer
 Invoke-WebRequest -Uri $URI -OutFile $InstallerFile
 
-$URI = $GithubCommonURI + "uninstall.ps1"
-$OutFile = $HomeDirectory + $UnInstaller
+$URI = $GithubCommonURI + "Uninstall.ps1"
+$OutFile = $HomeDirectory + $Uninstaller
 Invoke-WebRequest -Uri $URI -OutFile $OutFile
 
 $URI = $GithubCommonURI + "Vertion.txt"
@@ -178,7 +178,7 @@ git@github.com:##MGitHubName##/##ModuleName##.git
 
 $ModuleName = "##ModuleName##"
 $GitHubName = "##MGitHubName##"
-$URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/master/OnlineInstall.ps1"
+$URI = "https://raw.githubusercontent.com/MuraAtVwnet/ManageToDo/refs/heads/main/OnlineInstall.ps1"
 $OutFile = "~/OnlineInstall.ps1"
 Invoke-WebRequest -Uri $URI -OutFile $OutFile
 & $OutFile
