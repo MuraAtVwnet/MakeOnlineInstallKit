@@ -26,7 +26,7 @@ function AddCode(, [switch]$VertionCheck){
 		$Installer = "Install" + $ModuleName + ".ps1"
 		$Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 		$Vertion = "Vertion" + $ModuleName + ".txt"
-		$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/"
+		$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/master/"
 		$VertionTemp = "VertionTemp" + $ModuleName + ".tmp"
 		$VertionFilePath = Join-Path "~/" $Vertion
 		$VertionTempFilePath = Join-Path "~/" $VertionTemp
@@ -127,7 +127,7 @@ $Module = $ModuleName + ".psm1"
 $Installer = "Install" + $ModuleName + ".ps1"
 $Uninstaller = "Uninstall" + $ModuleName + ".ps1"
 $Vertion = "Vertion" + $ModuleName + ".txt"
-$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/"
+$GithubCommonURI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/master/"
 $OnlineInstaller = $HomeDirectory + "OnlineInstall.ps1"
 
 $URI = $GithubCommonURI + $Module
@@ -171,7 +171,7 @@ $Readme = @'
 
 $ModuleName = "##ModuleName##"
 $GitHubName = "##MGitHubName##"
-$URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/OnlineInstall.ps1"
+$URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/master/OnlineInstall.ps1"
 $OutFile = "~/OnlineInstall.ps1"
 Invoke-WebRequest -Uri $URI -OutFile $OutFile
 & $OutFile
