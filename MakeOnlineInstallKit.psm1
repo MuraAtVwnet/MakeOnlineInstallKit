@@ -184,7 +184,7 @@ Invoke-WebRequest -Uri $URI -OutFile $OutFile
 
 
 ■ Windows PowerShell を使っている方へ
-Windows PowerShell では、スクリプト実行が禁止になっていて、インストールとかうまく動かない場合は以下コマンドを PowerShell  のプロンプトにコピペしてください
+Windows PowerShell でスクリプトがエラーになって実行出来ない場合は以下コマンドを PowerShell のプロンプトにコピペしてください
 
 if((Get-ExecutionPolicy) -ne 'RemoteSigned'){Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force}
 
