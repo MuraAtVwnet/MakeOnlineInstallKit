@@ -169,6 +169,8 @@ $Readme = @'
 ■ スクリプトインストール方法
 --- 以下を PowerShell プロンプトにコピペ ---
 
+$Policy = Get-ExecutionPolicy
+if($Policy -notin @('RemoteSigned','Unrestricted','Bypass')){Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force}
 $ModuleName = "##ModuleName##"
 $GitHubName = "##MGitHubName##"
 $URI = "https://raw.githubusercontent.com/$GitHubName/$ModuleName/refs/heads/main/OnlineInstall.ps1"
@@ -181,12 +183,6 @@ Invoke-WebRequest -Uri $URI -OutFile $OutFile
 --- 以下を PowerShell プロンプトにコピペ ---
 
 ~/Uninstall##ModuleName##.ps1
-
-
-■ Windows PowerShell を使っている方へ
-Windows PowerShell でスクリプトがエラーになって実行出来ない場合は以下コマンドを PowerShell のプロンプトにコピペしてください
-
-if((Get-ExecutionPolicy) -ne 'RemoteSigned'){Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force}
 
 
 ■ GitHub
